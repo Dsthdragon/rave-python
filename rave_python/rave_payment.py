@@ -8,6 +8,7 @@ response_object = {
     "transactionComplete": False,
     "flwRef": "",
     "txRef": "",
+    "txid": 00,
     "chargecode": '00',
     "status": "",
     "vbvcode": "",
@@ -114,7 +115,7 @@ class Payment(RaveBase):
         responseJson = res["json"]
         # retrieve necessary properties from response 
         verify_response["status"] = responseJson['status']
-        verify_response['flwRef'], verify_response["txRef"], verify_response["vbvcode"], verify_response["vbvmessage"], verify_response["acctmessage"], verify_response["currency"], verify_response["chargecode"], verify_response["amount"], verify_response["chargedamount"], verify_response["chargemessage"] = Payment.retrieve(responseJson['data'], "flwref", "txref", "vbvcode", "vbvmessage", "acctmessage", "currency", "chargecode", "amount", "chargedamount", "chargemessage")
+        verify_response['txid'], verify_response['flwRef'], verify_response["txRef"], verify_response["vbvcode"], verify_response["vbvmessage"], verify_response["acctmessage"], verify_response["currency"], verify_response["chargecode"], verify_response["amount"], verify_response["chargedamount"], verify_response["chargemessage"] = Payment.retrieve(responseJson['data'], "txid","flwref", "txref", "vbvcode", "vbvmessage", "acctmessage", "currency", "chargecode", "amount", "chargedamount", "chargemessage")
 
         # Check if the chargecode is 00
         if verify_response['chargecode'] == "00":
