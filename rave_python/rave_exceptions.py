@@ -122,12 +122,13 @@ class PlanCreationError(RaveError):
 
 class PlanStatusError(RaveError):
     """ Raised when fetching transfer fails """
-    def __init__(self, type, err):
+    def __init__(self, type, title, err):
         self.err = err
         self.type = type
+        self.title = title
     
     def __str__(self):
-        return self.type +"ing plan failed with error: " + self.err["errMsg"]
+        return self.type+"ing "+self.title+" failed with error: "+self.err['errMsg']
 
 class SubaccountCreationError(RaveError):
     """ Raised when creating a payment plan fails """
