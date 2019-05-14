@@ -15,7 +15,7 @@ from rave_python.rave_subscription import Subscriptions
 
 class Rave:
     
-    def __init__(self, publicKey, secretKey, production=False, usingEnv=True):
+    def __init__(self, publicKey, secretKey=False, production=False, usingEnv=True):
         """ This is main organizing object. It contains the following:\n
             rave.Card -- For card transactions\n
             rave.Preauth -- For preauthorized transactions\n
