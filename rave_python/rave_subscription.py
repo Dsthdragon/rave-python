@@ -28,8 +28,8 @@ class Subscriptions(RaveBase) :
         
         return responseJson
     
-    # This makes and handles all requests pertaining to the status of your payment plans
-    def _handlePlanStatusRequests(self, type, endpoint, isPostRequest=False, data=None):
+    # This makes and handles all requests pertaining to the status of your  Subscriptions
+    def  _handleSubscriptionsStatusRequests(self, type, endpoint, isPostRequest=False, data=None):
 
         # Checks if it is a post request
         if isPostRequest:
@@ -45,30 +45,32 @@ class Subscriptions(RaveBase) :
 
         # Checks if it returns a 2xx code
         if response.ok:
-            return {"error": False, "returnedData": responseJson}
+            # return {"error": False, "data": responseJson}
+            return responseJson
         else:
-            raise PlanStatusError(type, {"error": True, "returnedData": str(responseJson) })
+            raise PlanStatusError(type, "subscription", {"error": True, "errMsg": responseJson['message'] })
 
     #gets all subscriptions connected to a merchant's account
     def allSubscriptions(self):
         endpoint = self._baseUrl + self._endpointMap["subscriptions"]["list"] + "?seckey="+self._getSecretKey()
-        return self._handlePlanStatusRequests("List", endpoint)
+        return self._handleSubscriptionsStatusRequests("List", endpoint)
     
     def fetchSubscription(self, subscription_id=None, subscription_email=None):
         if subscription_id:
-            endpoint = self._baseUrl + self._endpointMap["subscriptions"]["fetch"] + "?seckey="+self._getSecretKey() + "&id="+str(subscription_id)
+            endpoint = self._baseUrl + self._endpointMap["subscriptions"]["fetch"] + "?seckey="+self._getSecretKey() + "&transaction_id="+str(subscription_id)
         elif subscription_email:
             endpoint = self._baseUrl + self._endpointMap["subscriptions"]["fetch"] + "?seckey="+self._getSecretKey() + "&1="+subscription_email
         else:
-            return "You must pass either plan id or plan name in order to fetch a plan's details"
-        return self._handlePlanStatusRequests("Fetch", endpoint)
+            return "You must pass either subscription id or subscriptions email in order to fetch a subscription details"
+        
+        return self._handleSubscriptionsStatusRequests("Fetch", endpoint)
     
     def cancelSubscription(self, subscription_id):
         if not subscription_id:
             return "Subscription id was not supplied. Kindly supply one"
-        endpoint = self._baseUrl + self._endpointMap["subscriptions"]["cancel"] + str(id) + "/cancel"
+        endpoint = self._baseUrl + self._endpointMap["subscriptions"]["cancel"] + str(subscription_id) + "/cancel?fetch_by_tx=0"
         data = {"seckey": self._getSecretKey()}
-        return self._handlePlanStatusRequests("Cancel", endpoint, isPostRequest=True, data=data)
+        return self._handleSubscriptionsStatusRequests("Cancel", endpoint, isPostRequest=True, data=data)
     
     # activates a subscription plan
     # Params
@@ -76,6 +78,7 @@ class Subscriptions(RaveBase) :
     def activateSubscription(self, subscription_id):
         if not subscription_id:
             return "Subscription id was not supplied. Kindly supply one"
-        endpoint = self._baseUrl + self._endpointMap["subscriptions"]["activate"] + str(subscription_id) + "/activate"
+        endpoint = self._baseUrl + self._endpointMap["subscriptions"]["activate"] + str(subscription_id) + "/activate?fetch_by_tx=0"
         data = {"seckey": self._getSecretKey()}
-        return self._handlePlanStatusRequests("Activat", endpoint, isPostRequest=True, data=data)
+        print(endpoint)
+        return self._handleSubscriptionsStatusRequests("Activat", endpoint, isPostRequest=True, data=data)
