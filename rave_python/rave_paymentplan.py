@@ -53,10 +53,10 @@ class PaymentPlan(RaveBase) :
 
         # Checks if it returns a 2xx code
         if response.ok:
-            return {"error": False, "returnedData": responseJson}
+            return responseJson
         else:
-            raise PlanStatusError(type, {"error": True, "returnedData": responseJson })
-    
+            raise PlanStatusError(type, "plan", {"error": True, "errMsg": responseJson['message'] })
+
     #function to create a payment plan
     #Params: planDetails - a dict containing amount, name, interval, duration
     #if duration is not passed, any subscribed customer will be charged #indefinitely
